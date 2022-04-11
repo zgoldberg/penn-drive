@@ -1,0 +1,10 @@
+#!/bin/bash
+config=$1
+./bazel-bin/frontend/http_server -v -m fservers 2> master.out &
+while IFS= read -r line
+do
+	tokens=($line)
+    echo ${token}
+    bazel build //frontend:http_server --compilation_mode=dbg
+    ./bazel-bin/frontend/http_server -v -p ${tokens} 2> ${tokens}.out &
+done < "$config"

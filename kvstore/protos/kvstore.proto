@@ -1,0 +1,183 @@
+syntax = "proto3";
+
+package kvstore;
+
+service KeyValueStore {
+    rpc Put (PutRequest) returns (PutReply) {}
+    rpc CPut (CPutRequest) returns (CPutReply) {}
+    rpc Delete (DeleteRequest) returns (DeleteReply) {}
+    rpc Get (GetRequest) returns (GetReply) {}
+    rpc Recover (RecoverRequest) returns (RecoverReply) {}
+    rpc Disk (DiskRequest) returns (DiskReply) {}
+    rpc Metadata (MetadataRequest) returns (MetadataReply) {}
+    rpc Checkpoint (CheckpointRequest) returns (CheckpointReply) {}
+    rpc ColumnsForRow(ColumnsRequest) returns (ColumnsReply) {}
+}
+
+/* Requests */
+
+message PutRequest {
+    bytes row = 1;
+    bytes column = 2;
+    bytes value = 3;
+    bool is_client_message = 4;
+    string src_addr = 5;
+    int32 old_version = 6;
+}
+
+message CPutRequest {
+    string row = 1;
+    string column = 2;
+    bytes old_value = 3;
+    bytes new_value = 4;
+    bool is_client_message = 5;
+    string src_addr = 6;
+    int32 old_version = 7;
+}
+
+message DeleteRequest {
+    string row = 1;
+    string column = 2;
+    bool is_client_message = 3;
+    string src_addr = 4;
+    int32 old_version = 5;
+}
+
+message GetRequest {
+    string row = 1;
+    string column = 2;
+    string src_addr = 3;
+}
+
+message RecoverRequest {
+    string version = 1;
+    int32 num_iter = 2;
+}
+
+message RecoverReply {
+    bool version_match = 1;
+    bytes value = 2;
+    bool is_end = 3;
+    int32 block_id = 4;
+    string version = 5;
+}
+
+message DiskRequest {
+    int32 block_id = 1;
+}
+
+message DiskReply {
+    bytes value = 1;
+    bool is_end = 2;
+}
+
+message MetadataRequest {}
+
+message MetadataReply {
+    bytes value = 1;
+    string block_id = 2;
+    string block_offset = 3;
+}
+
+message CheckpointRequest {
+    string src_addr = 1;
+}
+
+message CheckpointReply {
+}
+
+message ColumnsRequest {
+    string row = 1;
+}
+
+message ColumnsReply {
+    ResponseCode response = 1;
+    repeated bytes column_names = 2;
+}
+
+/* Responses */
+
+enum ResponseCode {
+    FAILURE = 0; // not exactly sure when this should be returned
+    SUCCESS = 1;
+    CPUT_VAL_MISMATCH = 2;
+    MISSING_KEY = 3;
+}
+
+message PutReply {
+    ResponseCode response = 1;
+    bytes error = 2;
+}
+
+message CPutReply {
+    ResponseCode response = 1;
+    bytes error = 2;
+}
+
+message DeleteReply {
+    ResponseCode response = 1;
+    bytes error = 2;
+}
+
+message GetReply {
+    ResponseCode response = 1;
+    bytes value = 2;
+    string error = 3;
+}
+
+/* Master */
+
+service MasterBackend {
+    rpc Which(WhichRequest) returns (WhichReply) {}
+    rpc NodeStatus(NodeStatusRequest) returns (NodeStatusReply) {}
+    rpc NodeTurnOn(ChangeStatusRequest) returns (ChangeStatusReply) {}
+    rpc NodeTurnOff(ChangeStatusRequest) returns (ChangeStatusReply) {}
+    rpc GetRows(RowsRequest) returns (RowsReply) {}
+}
+
+message WhichRequest {
+    string user = 1;
+}
+
+message WhichReply {
+    ResponseCode response = 1;
+    string address = 2;
+}
+
+message NodeStatusRequest {}
+
+message NodeStatusReply {
+    ResponseCode response = 1;
+    repeated string node_names = 2;
+    repeated bool nodes_alive = 3;
+}
+
+message ChangeStatusRequest {
+    string node_name = 1;
+}
+
+message ChangeStatusReply {
+    ResponseCode response = 1;
+}
+
+message RowsRequest {}
+
+message RowsReply {
+    ResponseCode response = 1;
+    repeated bytes row_names = 2;
+}
+
+/* Heartbeat */
+
+service Health {
+    rpc Alive (AliveRequest) returns (AliveReply) {}
+}
+
+message AliveRequest {
+    string primary = 1;
+    string replicas = 2;
+    bool recover = 3;
+    bool updated_group = 4;
+}
+
+message AliveReply {}

@@ -1,0 +1,54 @@
+.header {
+    padding: 60px;
+    padding-top: 150px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+}
+
+.table {
+    display: flex;
+    margin: 5vh 5vw;
+    flex-direction: column;
+}
+
+.tab-row {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  overflow: scroll;
+}
+
+.tab-col {
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0px;
+}
+
+.button_container {
+    display: flex;
+    margin: 5vh 40vw;
+    flex-direction: row;
+}
+
+button.prev_btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button.next_btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}

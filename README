@@ -1,0 +1,10 @@
+# T07 Penn Cloud project
+
+## Prerequisite Installation Steps
+- install bazel
+- install grpc
+
+## Environment variables
+
+Bazel:
+- export PATH="$PATH:$HOME/bin"

@@ -1,0 +1,47 @@
+.header {
+    padding: 60px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+}
+
+.wrap {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.container {
+    padding: 16px;
+}
+
+.node {
+    width: 20vw;
+    margin: 20px;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.up_label {
+    color: green;
+}
+
+.down_label {
+    color: red;
+}
+
+button.down_btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
